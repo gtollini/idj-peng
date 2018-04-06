@@ -1,7 +1,7 @@
 #include "../include/Face.h"
 #include "../include/GameObject.h"
 
-Face::Face(GameObject& associated):GameObject(associated){
+Face::Face(GameObject& associated) : GameObject{associated}{
 	/* construir classe mãe*/
 	hitpoints = 30;
 }

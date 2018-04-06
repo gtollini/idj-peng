@@ -2,7 +2,7 @@
 #include "../include/State.h"
 #include "../include/Sprite.h"
 #include "../include/Game.h"
-
+#include <iostream>
 
 Sprite::Sprite(){
 	texture=nullptr;
@@ -10,9 +10,9 @@ Sprite::Sprite(){
 	height=0;
 	clipRect=nullptr;
 }
-Sprite::Sprite(char * file){
+Sprite::Sprite(std::string file){
 	Sprite();
-	Open (file);
+	Open (file.c_str());
 }
 
 Sprite::~Sprite(){
@@ -20,11 +20,11 @@ Sprite::~Sprite(){
 }
 
 
-void Sprite::Open(char * file){
+void Sprite::Open(std::string file){
 	if (texture != nullptr) SDL_DestroyTexture(texture);
-	texture = IMG_LoadTexture(Game::GetInstance().GetRenderer(),file);
+	texture = IMG_LoadTexture(Game::GetInstance().GetRenderer(),file.c_str());
 	if (texture==nullptr){
-		printf ("Erro ao carregar textura em %s\n", file);
+		printf ("Erro ao carregar textura em %s\n", file.c_str());
 	}
 	SDL_QueryTexture(texture, nullptr, nullptr, &width, &height);
 	SetClip (0,0,width, height);
@@ -58,3 +58,6 @@ bool Sprite::IsOpen(){
 	return texture!=nullptr;
 }
 
+bool Sprite::Is(std::string type){
+	return type=="Sprite";
+}

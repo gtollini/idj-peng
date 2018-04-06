@@ -5,17 +5,19 @@
 #include "SDL2/SDL.h"
 
 
-class Sprite {
+class Sprite: public Component {
 	public:
 		Sprite();
-		Sprite(char * file);
+		Sprite(std::string type);
 		~Sprite();
-		void Open (char * file);
+		void Open (std::string type);
 		void SetClip (int x, int y, int w, int h);
 		void Render (int x, int y);
 		int GetWidth ();
 		int GetHeight();
 		bool IsOpen();
+		bool Is (std::string type);
+
 	private:
 		SDL_Texture * texture;
 		int width;

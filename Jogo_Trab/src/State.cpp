@@ -1,12 +1,18 @@
 #include "../include/State.h"
 #include "../include/Sprite.h"
 #include "../include/Music.h"
+#include "../include/Rect.h"
+#include <cstdlib>
+#include <ctime>
+
+std::string spriteAdd = "../assets/img/penguinface.png";
+std::string soundAdd = "../assets/audio/boom.wav";
 
 
 State::State(){
 	quitRequested = false;
-	//bg = new Sprite((char *)"img/title.jpg");
-	music = new Music((char *)"audio/stageState.ogg");
+	//bg = new Sprite((char *)"assets/img/title.jpg");
+	music = new Music((char *)"assets/audio/stageState.ogg");
 	printf ("Inicializando Música... %s\n", music->IsOpen()?"true":"false");
 	music->Play(1);
 	/*Agora, bg é do tipo Sprite, que agora é componente. Quando você
@@ -24,7 +30,7 @@ void State::LoadAssets(){
 	music->Play(-1);
 }
 
-/* To fix*/
+
 void State::Input() {
 	SDL_Event event;
 	int mouseX, mouseY;
@@ -81,29 +87,27 @@ void State::Input() {
 
 void State::Update(float dt){
 	Input();
-	/*percorra o vetor de
-GameObjects chamando o Update dos mesmos. No final, percorra o array de
-objetos testando se algum dos GameObjects morreu. Se sim, remova-a do
-array   (
-erase
-).   O   loop   de   percorrimento   do   array   precisa   usar   índices
-numéricos, já que iteradores se tornam inválidos caso um elemento seja
-adicionado ao vetor (o que vai acontecer em trabalhos futuros).
-Sendo   assim,   para   obter   o   iterador   exigido   como   argumento   de
-vector::erase
-, use o iterador de início (
-vector::begin)
- somado à posição
-do elemento.*/
+	int size = objectArray.size;
+		for (int i=0; i<size; i++){
+			objectArray[i]->Update(dt);}
 }
 
 void State::Render(){
-	/*Render deve percorrer o array chamando a função Render de todos os
-	objetos nele. Aqui, não faz diferença usar iterador ou índice.*/
+	int size = objectArray.size;
+		for (int i=0; i<size; i++){
+			objectArray[i]->Render();}
 }
 
 void State::AddObject(int mouseX, int mouseY){
-	/*Todo*/
+
+	GameObject newObject = new GameObject();
+	Sprite *sprite = new Sprite(spriteAdd);
+	newObject.AddComponent(sprite);
+	newObject.box = new Rect(mouseX, mouseY, sprite->GetHeight(), sprite->GetWidth());
+	Sound *sound = new Sound(soundAdd);
+	newObject.AddComponent(sound);
+	objectArray.emplace_back(newObject);
+
 }
 bool State::QuitRequested(){
 	return quitRequested;

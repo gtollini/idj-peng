@@ -2,13 +2,13 @@
 #else
 #define STATE_CLASS
 
+#include <memory>
 #include "SDL2/SDL.h"
 #include "Sprite.h"
 #include "Music.h"
 #include <vector>
-#include <memory>
-#include <iostream>
 
+#include <iostream>
 
 
 
@@ -22,8 +22,7 @@ class State{
 		void LoadAssets();
 		void Update(float dt);
 		void Render();
-		//std::unique_ptr<int> teste;
-		//std::vector <std::unique_ptr<GameObject>> objectArray;
+		std::vector <std::unique_ptr<GameObject>> objectArray;
 	private:
 		~State();
 		Sprite *bg;

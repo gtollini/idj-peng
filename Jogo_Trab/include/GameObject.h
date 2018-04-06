@@ -2,6 +2,7 @@
 #define GAMEOBJECT_CLASS
 
 #include <vector>
+#include <iostream>
 #include "Rect.h"
 
 
