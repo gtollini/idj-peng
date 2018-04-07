@@ -3,24 +3,17 @@
 
 #include <vector>
 #include <iostream>
+#include <memory>
 #include "Rect.h"
 
 
-/*Agora   que   você   implementou
-State
-  usando   unique   pointers   para
-manter um registro de GOs, você pode retornar à classe
-GameObject
-  e
+/*Agora   que   você   implementou State usando   unique   pointers   para
+manter um registro de GOs, você pode retornar à classe GameObject e
 modificá-la   para,   ao   invés   de   usar   ponteiros   puros,   usar
 unique_ptr<Component>
 .   As   funções   que   você   terá   que   modificar   são
 ~GameObject
-,
-AddComponent
-,
 RemoveComponent
-  e
 GetComponent
 . Além da
 declaração do vetor
@@ -39,12 +32,12 @@ class GameObject {
 		bool IsDead();
 		void RequestDelete();
 		void AddComponent (Component * cpt);
-		void RemoveComponent (Component * cpt);
+		void RemoveComponent (std::unique_ptr<Component> cpt);
 		Component* GetComponent (std::string type);
 		Rect box;
 
 	private:
-		std::vector <Component *> components;
+		std::vector <std::unique_ptr<Component>> components;
 		bool isDead;
 };
 

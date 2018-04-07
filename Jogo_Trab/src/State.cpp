@@ -35,7 +35,6 @@ State::~State(){
 }
 
 void State::LoadAssets(){
-	/*todo*/
 }
 
 

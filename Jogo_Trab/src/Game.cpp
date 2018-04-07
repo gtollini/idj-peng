@@ -76,7 +76,7 @@ SDL_Renderer* Game::GetRenderer(){
 }
 
 void Game::Run(){
-	//state->LoadAssets();
+	state->LoadAssets();
 	while (!state->QuitRequested()){
 		state->Input();
 		state->Update(0);

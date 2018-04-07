@@ -8,7 +8,7 @@ Face::Face(GameObject& associated): Component(associated){
 
 void Face::Damage (int damage){
 	hitpoints-=damage;
-	if (hitpoints<0) associated.RequestDelete() /*Play Sound do associated? */ ;
+	if (hitpoints<0)	associated.RequestDelete();
 }
 
 void Face::Update(float dt){
