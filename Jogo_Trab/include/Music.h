@@ -9,11 +9,11 @@
 class Music{
 	public:
 		Music();
-		Music(char* file);
+		Music(std::string file);
 		~Music ();
 		void Stop (int msToStop);
 		void Play (int times);
-		void Open (char* file);
+		void Open (std::string file);
 		bool IsOpen ();
 
 	private:

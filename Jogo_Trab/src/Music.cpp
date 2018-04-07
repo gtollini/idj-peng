@@ -5,7 +5,7 @@
 Music::Music(){
 	music=nullptr;
 }
-Music::Music(char* file){
+Music::Music(std::string file){
 	Music();
 	Open(file);
 }
@@ -22,8 +22,8 @@ void Music::Stop(int msToStop){
 	Mix_FadeOutMusic (msToStop);
 }
 
-void Music::Open(char *file){
-	music = Mix_LoadMUS (file);
+void Music::Open(std::string file){
+	music = Mix_LoadMUS (file.c_str());
 	if (music == nullptr) printf ("Erro ao carregar música\n");
 }
 

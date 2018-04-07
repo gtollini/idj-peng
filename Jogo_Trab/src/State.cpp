@@ -2,32 +2,40 @@
 #include "../include/Sprite.h"
 #include "../include/Music.h"
 #include "../include/Rect.h"
+#include "../include/Face.h"
+#include "../include/Vec2.h"
+#include "../include/GameObject.h"
+#include "../include/Sound.h"
 #include <cstdlib>
 #include <ctime>
+#include <memory>
 
-std::string spriteAdd = "../assets/img/penguinface.png";
-std::string soundAdd = "../assets/audio/boom.wav";
+#define PI 3.1415
 
+
+std::string spriteAdd	= 	"assets/img/penguinface.png";
+std::string soundAdd 	= 	"assets/audio/boom.wav";
+std::string musicAdd 	= 	"assets/audio/stageState.ogg";
+std::string bgAdd 		= 	"assets/img/tileset.png";
 
 State::State(){
-	quitRequested = false;
-	//bg = new Sprite((char *)"assets/img/title.jpg");
-	music = new Music((char *)"assets/audio/stageState.ogg");
+	music = new Music(musicAdd);
 	printf ("Inicializando Música... %s\n", music->IsOpen()?"true":"false");
+	quitRequested = false;
+	GameObject *bgObject = new GameObject();
+	objectArray.emplace_back(bgObject);
+	Sprite *bg = new Sprite(bgAdd, *bgObject);
+	bg->SetClip(0,0,600,1024);
+	objectArray.back()->AddComponent(bg);
 	music->Play(1);
-	/*Agora, bg é do tipo Sprite, que agora é componente. Quando você
-terminar de implementar a função AddObject, vai saber melhor como voltar
-aqui e consertar isso.
-Você vai basicamente repetir o que foi feito lá, com exceção da adição
-do componente Face.*/
-
 }
+
 State::~State(){
 	objectArray.clear();
 }
 
 void State::LoadAssets(){
-	music->Play(-1);
+	/*todo*/
 }
 
 
@@ -59,7 +67,7 @@ void State::Input() {
 				// Esse código, assim como a classe Face, é provisório. Futuramente, para
 				// chamar funções de GameObjects, use objectArray[i]->função() direto.
 
-				if(go->box.Contains( {(float)mouseX, (float)mouseY} ) ) {
+				if(go->box.Contains((float)mouseX ,(float)mouseY)) {
 					Face* face = (Face*)go->GetComponent( "Face" );
 					if ( nullptr != face ) {
 						// Aplica dano
@@ -77,7 +85,8 @@ void State::Input() {
 			}
 			// Se não, crie um objeto
 			else {
-				Vec2 objPos = Vec2( 200, 0 ).GetRotated( -PI + PI*(rand() % 1001)/500.0 ) + Vec2( mouseX, mouseY );
+				Vec2 objPos = Vec2( 200, 0 ).GetRotated( -PI + PI*(rand() % 1001)/500.0)+Vec2( mouseX, mouseY );
+
 				AddObject((int)objPos.x, (int)objPos.y);
 			}
 		}
@@ -87,25 +96,29 @@ void State::Input() {
 
 void State::Update(float dt){
 	Input();
-	int size = objectArray.size;
+	int size = objectArray.size();
 		for (int i=0; i<size; i++){
 			objectArray[i]->Update(dt);}
 }
 
 void State::Render(){
-	int size = objectArray.size;
+	int size = objectArray.size();
 		for (int i=0; i<size; i++){
 			objectArray[i]->Render();}
 }
 
 void State::AddObject(int mouseX, int mouseY){
 
-	GameObject newObject = new GameObject();
-	Sprite *sprite = new Sprite(spriteAdd);
-	newObject.AddComponent(sprite);
-	newObject.box = new Rect(mouseX, mouseY, sprite->GetHeight(), sprite->GetWidth());
-	Sound *sound = new Sound(soundAdd);
-	newObject.AddComponent(sound);
+	GameObject *newObject = new GameObject();
+	Sprite *sprite = new Sprite(mouseX, mouseY, spriteAdd, *newObject);
+	newObject->AddComponent(sprite);
+	newObject->box.x=mouseX;
+	newObject->box.y=mouseY;
+	newObject->box.h=sprite->GetHeight();
+	newObject->box.w=sprite->GetWidth();
+	Sound *sound = new Sound(soundAdd, *newObject);
+	sound->Play(1);
+	newObject->AddComponent(sound);
 	objectArray.emplace_back(newObject);
 
 }

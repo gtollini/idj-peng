@@ -14,31 +14,35 @@ Rect::Rect(float X, float Y, float W, float H){
 	h=H;
 }
 
-Rect* add (Rect a, Rect b){
+Rect* Rect::add (Rect a, Rect b){
 	return new Rect(a.x+b.x, a.y+b.y, a.w+b.w, a.h+b.h);
 }
 
-Rect* sub (Rect a, Rect b){
+Rect* Rect::sub (Rect a, Rect b){
 	return new Rect(a.x-b.x, a.y-b.y, a.w-b.w, a.h-b.h);
 }
 
-Rect* esc_mul (float a, Rect b){
+Rect* Rect::esc_mul (float a, Rect b){
 	return new  Rect(a*b.x, a*b.y, a*b.w, a*b.h);
 }
 
-float abs(Rect a){
+float Rect::abs(Rect a){
 	return sqrt(a.x*a.x+a.y*a.y+a.w*a.w+a.h*a.h);
 }
 
-Rect* uni ( Rect b){
-	float abs=abs(b);
-	return new  Rect(b.x/abs, b.y/abs, b.w/abs, b.h/abs);
+Rect* Rect::uni ( Rect b){
+	float absb=abs(b);
+	return new  Rect(b.x/absb, b.y/absb, b.w/absb, b.h/absb);
 }
 
-float dist (Rect a, Rect b){
-	Rect c=sub(a, b);
-	float d = abs(c);
+float Rect::dist (Rect a, Rect b){
+	Rect *c=sub(a, b);
+	float d = abs(*c);
 	delete c;
 	return d;
+}
+
+bool Rect::Contains (float a, float b){
+	return (a-x<=w && b-y<=h)?(a-x>=0 && b-y>=0):(false);
 }
 

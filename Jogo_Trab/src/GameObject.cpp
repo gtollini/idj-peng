@@ -9,14 +9,14 @@ GameObject::~GameObject(){
 }
 
 void GameObject::Update(float dt){
-	int size = components.size;
+	int size = components.size();
 		for (int i=0; i<size; i++){
 			components[i]->Update(dt);
 		}
 }
 
 void GameObject::Render(){
-	int size = components.size;
+	int size = components.size();
 		for (int i=0; i<size; i++){
 			components[i]->Render();
 		}
@@ -36,7 +36,7 @@ void GameObject::AddComponent(Component* cpt){
 }
 
 void GameObject::RemoveComponent(Component * cpt){
-	int size = components.size;
+	int size = components.size();
 		for (int i=0; i<size; i++){
 			if (components[i]==cpt){
 				delete components[i];
@@ -45,7 +45,7 @@ void GameObject::RemoveComponent(Component * cpt){
 }
 
 Component * GameObject::GetComponent(std::string type){
-	int size = components.size;
+	int size = components.size();
 			for (int i=0; i<size; i++){
 				if (components[i]->Is(type)){
 					return components[i];

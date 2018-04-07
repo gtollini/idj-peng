@@ -7,7 +7,6 @@
 #include "Sprite.h"
 #include "Music.h"
 #include <vector>
-
 #include <iostream>
 
 
@@ -22,12 +21,12 @@ class State{
 		void LoadAssets();
 		void Update(float dt);
 		void Render();
-		std::vector <std::unique_ptr<GameObject>> objectArray;
+
 	private:
 		~State();
-		Sprite *bg;
 		Music *music;
 		bool quitRequested;
+		std::vector<std::unique_ptr<GameObject>> objectArray;
 };
 
 

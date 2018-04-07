@@ -1,12 +1,14 @@
 #ifndef SOUND_CLASS
 #define SOUND_CLASS
-#include <Component.h>
+#include "Component.h"
+#include "SDL2/SDL_mixer.h"
+#include "GameObject.h"
 
 
 class Sound : public Component {
 	public:
 		Sound(GameObject& associated);
-		Sound(GameObject& associated, std::string file);
+		Sound(std::string file, GameObject& associated);
 		~Sound();
 
 		void Play (int times=1);
@@ -16,7 +18,7 @@ class Sound : public Component {
 
 		void Update(float dt);
 		void Render();
-		void Is(std::string type);
+		bool Is(std::string type);
 	private:
 		Mix_Chunk* chunk;
 		int channel;
