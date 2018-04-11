@@ -6,6 +6,14 @@
 
 #include "SDL_include.h"
 
+Sprite::Sprite(std::string file){
+	texture=nullptr;
+	width=0;
+	height=0;
+	clipRect=new SDL_Rect();
+	Open (file.c_str());
+}
+
 Sprite::Sprite(GameObject& associated): Component(associated){
 	texture=nullptr;
 	width=0;

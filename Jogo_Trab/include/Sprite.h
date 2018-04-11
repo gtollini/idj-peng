@@ -7,6 +7,7 @@
 
 class Sprite: public Component {
 	public:
+		Sprite(std::string file);
 		Sprite(GameObject& associated);
 		Sprite(std::string type, GameObject& associated);
 		Sprite(int x, int y,std::string type, GameObject& associated);
