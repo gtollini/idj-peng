@@ -3,7 +3,7 @@
 #define MUSIC_CLASS
 #include <iostream>
 #include "SDL2/SDL_mixer.h"
-
+#include "Resources.h"
 
 
 class Music{
@@ -18,6 +18,7 @@ class Music{
 
 	private:
 		Mix_Music * music;
+		Resources resources;
 };
 #endif
 

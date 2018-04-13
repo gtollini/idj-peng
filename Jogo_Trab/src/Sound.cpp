@@ -29,7 +29,7 @@ void Sound::Render(){
 }
 
 void Sound::Open(std::string file){
-	chunk = Mix_LoadWAV(file.c_str());
+	chunk = resources.GetSound(file);
 }
 
 bool Sound::Is(std::string type){
@@ -39,5 +39,5 @@ bool Sound::Is(std::string type){
 
 Sound::~Sound(){
 	if (chunk!=nullptr) Mix_HaltChannel (channel);
-	Mix_FreeChunk(chunk);
+	resources.ClearSounds();
 }

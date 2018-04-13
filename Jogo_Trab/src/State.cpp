@@ -6,28 +6,53 @@
 #include "../include/Vec2.h"
 #include "../include/GameObject.h"
 #include "../include/Sound.h"
+#include "../include/TileMap.h"
+#include "../include/TileSet.h"
 #include <cstdlib>
 #include <ctime>
 #include <memory>
 
 #define PI 3.1415
+#define TILEW 64
+#define TILEH 64
 
-
-std::string spriteAdd	= 	"assets/img/penguinface.png";
-std::string soundAdd 	= 	"assets/audio/boom.wav";
-std::string musicAdd 	= 	"assets/audio/stageState.ogg";
-std::string bgAdd 		= 	"assets/img/tileset.png";
+const std::string spriteAdd	= 	"assets/img/penguinface.png";
+const std::string soundAdd 	= 	"assets/audio/boom.wav";
+const std::string musicAdd 	= 	"assets/audio/stageState.ogg";
+const std::string bgAdd 	= 	"assets/img/tileset.png";
+const std::string mapTxtAdd =	"assets/map/tileMap.txt";
 
 State::State(){
-	music = new Music(musicAdd);
-	printf ("Inicializando Música... %s\n", music->IsOpen()?"true":"false");
 	quitRequested = false;
-	GameObject *bgObject = new GameObject();
+	printf ("Inicializando Música...\n");
+	music = new Music(musicAdd);
+	printf ("	%s\n\n", music->IsOpen()?"ok":"erro");
+
+	/*GameObject *bgObject = new GameObject();
 	objectArray.emplace_back(bgObject);
 	Sprite *bg = new Sprite(bgAdd, *bgObject);
 	bg->SetClip(0,0,600,1024);
-	objectArray.back()->AddComponent(bg);
+	objectArray.back()->AddComponent(bg);*/
+
 	music->Play(1);
+	printf ("Inicializando tileset...\n");
+	TileSet *ts=nullptr;
+	ts = new TileSet(TILEW, TILEH, bgAdd);
+	printf ("	%s\n\n",ts!=nullptr?"ok":"erro");
+
+
+	GameObject *mapObject = new GameObject();
+	objectArray.emplace_back(mapObject);
+
+	printf ("Inicializando mapa...\n");
+	TileMap *map = nullptr;
+	map = new TileMap(*mapObject, mapTxtAdd, ts);
+	printf ("	%s\n\n", map!=nullptr?"ok":"erro");
+	mapObject->box.x=0;
+	mapObject->box.y=0;
+	mapObject->box.h=TILEH;
+	mapObject->box.w=TILEW;
+	objectArray.back()->AddComponent(map);
 }
 
 State::~State(){

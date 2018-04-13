@@ -1,6 +1,9 @@
+#ifndef TILESET_CLASS
+#define TILESET_CLASS
+
 #include <iostream>
 #include "Sprite.h"
-#ifndef TILESET_CLASS
+
 
 
 class TileSet {
@@ -22,5 +25,5 @@ private:
 
 
 
-#define TILESET_CLASS
+
 #endif

@@ -1,9 +1,13 @@
+#ifndef TILEMAP_CLASS
+#define TILEMAP_CLASS
+
 #include <iostream>
 #include "GameObject.h"
 #include "TileSet.h"
-#ifndef TILEMAP_CLASS
+#include "Component.h"
 
-class TileMap {
+
+class TileMap : public Component {
 public:
 	TileMap (GameObject& associated, std::string file, TileSet* tileSet);
 	void Load (std::string file);
@@ -13,7 +17,8 @@ public:
 	void RenderLayer (int layer, int cameraX, int cameraY);
 	int GetWidth();
 	int GetHeight();
-	int GetDepth;
+	int GetDepth();
+	bool Is (std::string type);
 private:
 	std::vector<int> tileMatrix;
 	TileSet* tileSet;
@@ -23,5 +28,5 @@ private:
 };
 
 
-#define TILEMAP_CLASS
+
 #endif

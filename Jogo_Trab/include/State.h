@@ -8,6 +8,7 @@
 #include "Music.h"
 #include <vector>
 #include <iostream>
+#include "Resources.h"
 
 
 
@@ -27,6 +28,7 @@ class State{
 		Music *music;
 		bool quitRequested;
 		std::vector<std::unique_ptr<GameObject>> objectArray;
+
 };
 
 

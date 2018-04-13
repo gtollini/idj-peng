@@ -1,5 +1,6 @@
 #include "../include/Music.h"
 #include "SDL2/SDL_mixer.h"
+#include "../include/Resources.h"
 #define STOPCONST 1000
 
 Music::Music(){
@@ -12,6 +13,7 @@ Music::Music(std::string file){
 
 Music::~Music(){
 	Stop(STOPCONST);
+	resources.ClearMusics();
 }
 
 void Music::Play(int i){
@@ -23,8 +25,7 @@ void Music::Stop(int msToStop){
 }
 
 void Music::Open(std::string file){
-	music = Mix_LoadMUS (file.c_str());
-	if (music == nullptr) printf ("Erro ao carregar música\n");
+	music = resources.GetMusic(file);
 }
 
 bool Music::IsOpen(){

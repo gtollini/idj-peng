@@ -2,17 +2,9 @@
 #include "../include/State.h"
 #include "../include/Sprite.h"
 #include "../include/Game.h"
+#include "../include/Resources.h"
 #include <iostream>
 
-#include "SDL_include.h"
-
-Sprite::Sprite(std::string file){
-	texture=nullptr;
-	width=0;
-	height=0;
-	clipRect=new SDL_Rect();
-	Open (file.c_str());
-}
 
 Sprite::Sprite(GameObject& associated): Component(associated){
 	texture=nullptr;
@@ -41,16 +33,12 @@ Sprite::Sprite(int x, int y,std::string file, GameObject& associated): Component
 
 
 Sprite::~Sprite(){
-	SDL_DestroyTexture(texture);
+	resources.ClearImages();
 }
 
 
 void Sprite::Open(std::string file){
-	if (this->texture != nullptr) SDL_DestroyTexture(this->texture);
-	this->texture = IMG_LoadTexture(Game::GetInstance().GetRenderer(),file.c_str());
-	if (this->texture==nullptr){
-		printf ("Erro ao carregar textura em %s\n", file.c_str());
-	}
+	this->texture=resources.GetImage(file);
 	SDL_QueryTexture(texture, nullptr, nullptr, &height, &width);
 	SetClip (0,0,height, width);
 }
@@ -73,6 +61,14 @@ void Sprite::Render(){
 
 	SDL_RenderCopy(Game::GetInstance().GetRenderer(), texture, &srcrect, &dstrect);
 }
+
+void Sprite::Render(int srcX, int srcY, int h, int  w,  int dstX, int dstY){
+	SDL_Rect srcrect = SDL_Rect{srcX, srcY, h, w};
+	SDL_Rect dstrect = SDL_Rect{dstX,dstY,h,w};
+
+	SDL_RenderCopy(Game::GetInstance().GetRenderer(), texture, &srcrect, &dstrect);
+}
+
 
 int Sprite::GetWidth(){
 	return width;
