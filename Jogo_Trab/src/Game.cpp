@@ -83,5 +83,6 @@ void Game::Run(){
 		state->Render();
 		SDL_RenderPresent(renderer);
 		SDL_Delay(33);}
+	state->Delete();
 
 }

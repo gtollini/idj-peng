@@ -146,6 +146,16 @@ void State::AddObject(int mouseX, int mouseY){
 	objectArray.emplace_back(newObject);
 
 }
+
+void State::Delete(){
+	int l=objectArray.size();
+	for (int i=0;i<l;i++){
+		objectArray[i].reset();
+	}
+	delete this;
+}
+
+
 bool State::QuitRequested(){
 	return quitRequested;
 }

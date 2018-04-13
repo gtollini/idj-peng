@@ -22,6 +22,7 @@ class State{
 		void LoadAssets();
 		void Update(float dt);
 		void Render();
+		void Delete();
 
 	private:
 		~State();
