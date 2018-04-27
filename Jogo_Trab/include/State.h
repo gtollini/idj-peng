@@ -9,6 +9,7 @@
 #include <vector>
 #include <iostream>
 #include "Resources.h"
+#include "Camera.h"
 
 
 
@@ -26,6 +27,7 @@ class State{
 
 	private:
 		~State();
+		Camera camera;
 		Music *music;
 		bool quitRequested;
 		std::vector<std::unique_ptr<GameObject>> objectArray;

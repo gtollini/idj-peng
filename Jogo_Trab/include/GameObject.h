@@ -13,8 +13,8 @@ class GameObject {
 		GameObject();
 		~GameObject();
 
-		void Update (float dt);
-		void Render();
+		void Update (float dt, float cameraX, float cameraY);
+		void Render(int cameraX, int cameraY);
 		bool IsDead();
 		void RequestDelete();
 		void AddComponent (Component * cpt);

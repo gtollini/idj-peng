@@ -8,6 +8,8 @@
 #include "../include/Sound.h"
 #include "../include/TileMap.h"
 #include "../include/TileSet.h"
+#include "../include/InputManager.h"
+#include "../include/CameraFollower.h"
 #include <cstdlib>
 #include <ctime>
 #include <memory>
@@ -19,7 +21,8 @@
 const std::string spriteAdd	= 	"assets/img/penguinface.png";
 const std::string soundAdd 	= 	"assets/audio/boom.wav";
 const std::string musicAdd 	= 	"assets/audio/stageState.ogg";
-const std::string bgAdd 	= 	"assets/img/tileset.png";
+const std::string bgAdd 	= 	"assets/img/ocean.jpg";
+const std::string tsAdd 	= 	"assets/img/tileset.png";
 const std::string mapTxtAdd =	"assets/map/tileMap.txt";
 
 State::State(){
@@ -28,18 +31,21 @@ State::State(){
 	music = new Music(musicAdd);
 	printf ("	%s\n\n", music->IsOpen()?"ok":"erro");
 
-	/*GameObject *bgObject = new GameObject();
-	objectArray.emplace_back(bgObject);
-	Sprite *bg = new Sprite(bgAdd, *bgObject);
-	bg->SetClip(0,0,600,1024);
-	objectArray.back()->AddComponent(bg);*/
-
 	music->Play(1);
 	printf ("Inicializando tileset...\n");
 	TileSet *ts=nullptr;
-	ts = new TileSet(TILEW, TILEH, bgAdd);
+	ts = new TileSet(TILEW, TILEH, tsAdd);
 	printf ("	%s\n\n",ts!=nullptr?"ok":"erro");
 
+	GameObject *bgObject = new GameObject();
+
+	Sprite *bg = new Sprite(bgAdd, *bgObject);
+	bg->SetClip(0,0,600,1024);
+	CameraFollower* cf = new CameraFollower (*bgObject);
+
+	bgObject->AddComponent(bg);
+	bgObject->AddComponent(cf);
+	objectArray.emplace_back(bgObject);
 
 	GameObject *mapObject = new GameObject();
 	objectArray.emplace_back(mapObject);
@@ -63,9 +69,9 @@ void State::LoadAssets(){
 }
 
 
-void State::Input() {
+/*void State::Input() {
 	SDL_Event event;
-	int mouseX, mouseY;
+
 
 	// Obtenha as coordenadas do mouse
 	SDL_GetMouseState(&mouseX, &mouseY);
@@ -109,26 +115,46 @@ void State::Input() {
 			}
 			// Se não, crie um objeto
 			else {
-				Vec2 objPos = Vec2( 200, 0 ).GetRotated( -PI + PI*(rand() % 1001)/500.0)+Vec2( mouseX, mouseY );
 
-				AddObject((int)objPos.x, (int)objPos.y);
 			}
 		}
 	}
 }
-
+*/
 
 void State::Update(float dt){
-	Input();
+	//Input();
+	int mouseX, mouseY;
+	mouseX = InputManager::GetInstance().GetMouseX();
+	mouseY = InputManager::GetInstance().GetMouseY();
+
+	if (InputManager::GetInstance().QuitRequested() || InputManager::GetInstance().IsKeyDown(ESCAPE_KEY)) {
+		quitRequested = true;
+	}
+	if (InputManager::GetInstance().IsKeyDown(' ')){
+		Vec2 objPos = Vec2( 200, 0 ).GetRotated( -PI + PI*(rand() % 1001)/500.0)+Vec2( mouseX, mouseY );
+		AddObject((int)objPos.x, (int)objPos.y);
+ 	}
+
+	camera.Update(dt);
+
+
 	int size = objectArray.size();
+		GameObject *aux;
 		for (int i=0; i<size; i++){
-			objectArray[i]->Update(dt);}
+			objectArray[i]->Update(dt, camera.pos.x, camera.pos.y);
+			if (objectArray[i]->IsDead()){
+				objectArray.erase(objectArray.begin()+i);
+				size--;
+				i--;
+			}
+		}
 }
 
 void State::Render(){
 	int size = objectArray.size();
 		for (int i=0; i<size; i++){
-			objectArray[i]->Render();}
+			objectArray[i]->Render(camera.pos.x, camera.pos.y);}
 }
 
 void State::AddObject(int mouseX, int mouseY){
@@ -141,7 +167,8 @@ void State::AddObject(int mouseX, int mouseY){
 	newObject->box.h=sprite->GetHeight();
 	newObject->box.w=sprite->GetWidth();
 	Sound *sound = new Sound(soundAdd, *newObject);
-	sound->Play(1);
+	Face *face = new Face(*newObject);
+	newObject->AddComponent(face);
 	newObject->AddComponent(sound);
 	objectArray.emplace_back(newObject);
 

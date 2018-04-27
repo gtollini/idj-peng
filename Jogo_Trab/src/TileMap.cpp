@@ -62,6 +62,13 @@ void TileMap::Render(){
 	}
 }
 
+void TileMap::Render(float cameraX, float cameraY){
+	for (int i=0; i<mapDepth; i++){
+			//printf ("Ax = %f	Cx=%f\n", associated.box.x, cameraX);
+			RenderLayer(i, (int)(associated.box.x+cameraX), (int)(associated.box.y+cameraY));
+		}
+}
+
 int TileMap::GetWidth(){
 	return mapWidth;
 }

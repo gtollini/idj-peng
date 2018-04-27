@@ -19,6 +19,7 @@ public:
 	int GetHeight();
 	int GetDepth();
 	bool Is (std::string type);
+	void Render(float cameraX, float cameraY);
 private:
 	std::vector<int> tileMatrix;
 	TileSet* tileSet;

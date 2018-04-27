@@ -4,10 +4,13 @@
 
 # Add inputs and outputs from these tool invocations to the build variables 
 CPP_SRCS += \
+../src/Camera.cpp \
+../src/CameraFollower.cpp \
 ../src/Component.cpp \
 ../src/Face.cpp \
 ../src/Game.cpp \
 ../src/GameObject.cpp \
+../src/InputManager.cpp \
 ../src/Music.cpp \
 ../src/Rect.cpp \
 ../src/Resources.cpp \
@@ -20,10 +23,13 @@ CPP_SRCS += \
 ../src/main.cpp 
 
 OBJS += \
+./src/Camera.o \
+./src/CameraFollower.o \
 ./src/Component.o \
 ./src/Face.o \
 ./src/Game.o \
 ./src/GameObject.o \
+./src/InputManager.o \
 ./src/Music.o \
 ./src/Rect.o \
 ./src/Resources.o \
@@ -36,10 +42,13 @@ OBJS += \
 ./src/main.o 
 
 CPP_DEPS += \
+./src/Camera.d \
+./src/CameraFollower.d \
 ./src/Component.d \
 ./src/Face.d \
 ./src/Game.d \
 ./src/GameObject.d \
+./src/InputManager.d \
 ./src/Music.d \
 ./src/Rect.d \
 ./src/Resources.d \

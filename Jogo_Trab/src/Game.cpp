@@ -2,11 +2,14 @@
 #include "SDL2/SDL_mixer.h"
 #include "../include/Game.h"
 #include "../include/State.h"
+#include "../include/InputManager.h"
 
 Game *Game::instance;
 
 Game::Game(char * title, int width, int height){
 	instance=this;
+	dt=0;
+	frameStart=0;
 	if (SDL_Init( SDL_INIT_VIDEO | SDL_INIT_AUDIO | SDL_INIT_TIMER)){
 		printf ("erro na inicialização do SDL\n");
 
@@ -78,11 +81,23 @@ SDL_Renderer* Game::GetRenderer(){
 void Game::Run(){
 	state->LoadAssets();
 	while (!state->QuitRequested()){
-		state->Input();
-		state->Update(0);
+		CalculateDeltaTime();
+		InputManager::GetInstance().Update();
+		state->Update(dt);
 		state->Render();
 		SDL_RenderPresent(renderer);
 		SDL_Delay(33);}
 	state->Delete();
 
+}
+
+void Game::CalculateDeltaTime(){
+	int old=frameStart;
+	frameStart=SDL_GetTicks ();
+	dt = (frameStart-old);
+
+}
+
+float Game::GetDeltaTime(){
+	return dt;
 }

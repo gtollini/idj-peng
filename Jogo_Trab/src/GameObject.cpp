@@ -1,27 +1,49 @@
 #include "../include/GameObject.h"
-
+#include "../include/TileMap.h"
+#include "../include/CameraFollower.h"
 GameObject::GameObject(){
 	isDead = false;
 }
 
 GameObject::~GameObject(){
+	int size = components.size();
+	for (int i=0; i<size; i++){
+		components[i].release();
+	}
 	components.clear();
 }
 
-void GameObject::Update(float dt){
+void GameObject::Update(float dt, float cameraX, float cameraY){
 	int size = components.size();
 		for (int i=0; i<size; i++){
-			components[i]->Update(dt);
+			if (components[i]->Is("CameraFollower")){
+				CameraFollower *cf;
+				cf = (CameraFollower *) components[i].get();
+				cf->Update(dt, cameraX, cameraY);
+				//printf ("x:%f 	y:%f\n", this->box.x, this->box.y);
+			}
+			else
+				components[i]->Update(dt);
+		}
+
+}
+
+void GameObject::Render(int cameraX, int cameraY){
+	int size = components.size();
+
+		for (int i=0; i<size; i++){
+			if (components[i]->Is("TileMap")){
+				TileMap *aux;
+				aux = (TileMap *)components[i].get();
+				aux->Render(cameraX, cameraY);
+			}
+			else{
+				components[i]->Render();
+			}
 		}
 }
 
-void GameObject::Render(){
-	int size = components.size();
-		for (int i=0; i<size; i++){
-			components[i]->Render();
-		}
 
-}
 
 bool GameObject::IsDead(){
 	return isDead;

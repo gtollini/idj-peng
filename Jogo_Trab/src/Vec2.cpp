@@ -18,3 +18,10 @@ Vec2 Vec2::operator+(const Vec2 a){
 	b.y=this->y+a.y;
 	return b;
 }
+
+Vec2 Vec2::operator*(const float a){
+	Vec2 b;
+	b.x=this->x*a;
+	b.y=this->y*a;
+	return b;
+}
