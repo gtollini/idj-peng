@@ -12,19 +12,23 @@ class GameObject {
 	public:
 		GameObject();
 		~GameObject();
+		void Start();
 
-		void Update (float dt, float cameraX, float cameraY);
-		void Render(int cameraX, int cameraY);
+		void Update (float dt);
+		void Render();
 		bool IsDead();
 		void RequestDelete();
 		void AddComponent (Component * cpt);
 		void RemoveComponent (std::unique_ptr<Component> cpt);
 		Component* GetComponent (std::string type);
 		Rect box;
+		double angle;
 
 	private:
+
 		std::vector <std::unique_ptr<Component>> components;
 		bool isDead;
+		bool started;
 };
 
 #include "Component.h"

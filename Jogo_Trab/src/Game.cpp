@@ -4,6 +4,8 @@
 #include "../include/State.h"
 #include "../include/InputManager.h"
 
+
+#define LOOP_MENU 0
 Game *Game::instance;
 
 Game::Game(char * title, int width, int height){
@@ -79,13 +81,20 @@ SDL_Renderer* Game::GetRenderer(){
 }
 
 void Game::Run(){
-	state->LoadAssets();
+	state->Start();
+
 	while (!state->QuitRequested()){
+		if (LOOP_MENU) printf (" 		Calculating dt\n");
 		CalculateDeltaTime();
+		if (LOOP_MENU)printf (" 		Updating input\n");
 		InputManager::GetInstance().Update();
+		if (LOOP_MENU)printf (" 		Updating state\n");
 		state->Update(dt);
+		if (LOOP_MENU)printf (" 		Rendering state\n");
 		state->Render();
+		if (LOOP_MENU)printf (" 		Rendering\n");
 		SDL_RenderPresent(renderer);
+		if (LOOP_MENU)printf (" 		Done! dt\n");
 		SDL_Delay(33);}
 	state->Delete();
 

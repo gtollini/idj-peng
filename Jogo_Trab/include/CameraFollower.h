@@ -6,7 +6,6 @@
 class CameraFollower : public Component{
 public:
 	CameraFollower (GameObject& associated);
-	void Update(float dt, float x,float y);
 	void Update (float dt);
 	void Render();
 	bool Is(std::string type);

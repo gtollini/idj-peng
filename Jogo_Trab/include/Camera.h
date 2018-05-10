@@ -5,7 +5,7 @@
 
 class Camera{
 public:
-	//Camera& GetInstance();
+	static Camera& GetInstance();
 	void Follow (GameObject* newFocus);
 	void Unfollow();
 	void Update(float dt);

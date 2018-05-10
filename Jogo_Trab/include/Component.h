@@ -8,6 +8,7 @@
 
 class Component{
 	public:
+		virtual void Start();
 		Component (GameObject& associated);
 		virtual ~Component();
 		virtual void Update (float dt);

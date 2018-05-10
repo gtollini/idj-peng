@@ -1,5 +1,6 @@
 #include "../include/Rect.h"
 #include <math.h>
+#include "../include/Vec2.h"
 
 Rect::Rect (){
 	x=0;
@@ -46,3 +47,41 @@ bool Rect::Contains (float a, float b){
 	return (a-x<=w && b-y<=h)?(a-x>=0 && b-y>=0):(false);
 }
 
+
+Vec2 Rect::Pos(){
+	Vec2 a;
+	a.x=this->x;
+	a.y=this->y;
+	return a;
+}
+
+
+void Rect::SetPos(float x, float y){
+	this->x=x;
+	this->y=y;
+};
+
+void Rect::SetPos(Vec2 a){
+	this->x=a.x;
+	this->y=a.y;
+};
+
+Rect Rect::operator +(Vec2 a){
+	Rect b;
+	b.x+=a.x;
+	b.y+=a.y;
+	b.h=this->h;
+	b.w=this->w;
+	return b;
+}
+
+void Rect::Center(){
+	this->x=this->x-this->h/2;
+	this->y=this->y-this->w/2;
+
+}
+
+void Rect::CenterRot(float a, float b, float c, float d){
+	this->x= a - c*sin(d);
+	this->y= b - c*cos(d);
+}

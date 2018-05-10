@@ -8,13 +8,9 @@ CameraFollower::CameraFollower(GameObject& associated) : Component (associated){
 };
 
 void CameraFollower::Update(float dt){
-
+	associated.box.SetPos(Camera::GetInstance().pos);
 }
 
-void CameraFollower::Update(float dt, float x,float y){
-	associated.box.x= x;
-	associated.box.y= y;
-}
 
 void CameraFollower::Render(){
 

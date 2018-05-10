@@ -17,6 +17,10 @@
 class State{
 	public:
 		State();
+		void Start();
+		std::weak_ptr<GameObject> AddObject(GameObject* go);
+		std::weak_ptr<GameObject> GetObjectPtr(GameObject* go);
+
 		void AddObject(int MouseX, int MouseY);
 		void Input();
 		bool QuitRequested();
@@ -27,10 +31,12 @@ class State{
 
 	private:
 		~State();
-		Camera camera;
+		bool started;
+		std::vector<std::shared_ptr<GameObject>> objectArray;
+
 		Music *music;
 		bool quitRequested;
-		std::vector<std::unique_ptr<GameObject>> objectArray;
+		//std::vector<std::unique_ptr<GameObject>> objectArray;
 
 };
 

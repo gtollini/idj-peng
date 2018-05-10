@@ -17,4 +17,6 @@ void Component::Render(){
 
 }
 
+void Component::Start(){
 
+};

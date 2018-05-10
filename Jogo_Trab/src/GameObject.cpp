@@ -1,9 +1,17 @@
 #include "../include/GameObject.h"
 #include "../include/TileMap.h"
 #include "../include/CameraFollower.h"
+#include "../include/Camera.h"
+
+#define UPDATE_MENU 0
+#define RENDER_MENU 0
+
 GameObject::GameObject(){
 	isDead = false;
+	started=false;
+	angle=0;
 }
+
 
 GameObject::~GameObject(){
 	int size = components.size();
@@ -13,34 +21,25 @@ GameObject::~GameObject(){
 	components.clear();
 }
 
-void GameObject::Update(float dt, float cameraX, float cameraY){
+void GameObject::Update(float dt){
 	int size = components.size();
+	if (UPDATE_MENU) printf ("Initializing Update...\n");
 		for (int i=0; i<size; i++){
-			if (components[i]->Is("CameraFollower")){
-				CameraFollower *cf;
-				cf = (CameraFollower *) components[i].get();
-				cf->Update(dt, cameraX, cameraY);
-				//printf ("x:%f 	y:%f\n", this->box.x, this->box.y);
-			}
-			else
-				components[i]->Update(dt);
+			components[i]->Update(dt);
+			if (UPDATE_MENU) printf ("Done Updating:%s - %d/%d\n", components[i]->Is("Minion")?"Minion":(components[i]->Is("Alien")?"Alien":(components[i]->Is("TileMap")?"TileMap":(components[i]->Is("Sprite")?"Sprite":(components[i]->Is("CameraFollower")?"CameraFollower":"Irrelevant")))), i+1, size);
 		}
+		if (UPDATE_MENU) printf ("Done Updating!\n");
 
 }
 
-void GameObject::Render(int cameraX, int cameraY){
+void GameObject::Render(){
 	int size = components.size();
 
 		for (int i=0; i<size; i++){
-			if (components[i]->Is("TileMap")){
-				TileMap *aux;
-				aux = (TileMap *)components[i].get();
-				aux->Render(cameraX, cameraY);
-			}
-			else{
-				components[i]->Render();
-			}
+			components[i]->Render();
+			if (RENDER_MENU) printf ("Done Rendering:%s - %d/%d\n", components[i]->Is("Minion")?"Minion":(components[i]->Is("Alien")?"Alien":(components[i]->Is("TileMap")?"TileMap":(components[i]->Is("Sprite")?"Sprite":"Irrelavant"))), i+1, size);
 		}
+		if (RENDER_MENU) printf ("Done Rendering!\n");
 }
 
 
@@ -76,5 +75,11 @@ Component * GameObject::GetComponent(std::string type){
 	return nullptr;
 }
 
-
+void GameObject::Start(){
+	started=true;
+	int size = components.size();
+	for (int i=0; i<size; i++){
+		components[i]->Start();
+	}
+}
 
