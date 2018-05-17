@@ -19,4 +19,8 @@ void Component::Render(){
 
 void Component::Start(){
 
-};
+}
+
+void Component::NotifyCollision(GameObject& other){
+
+}

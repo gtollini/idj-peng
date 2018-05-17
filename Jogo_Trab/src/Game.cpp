@@ -84,6 +84,8 @@ void Game::Run(){
 	state->Start();
 
 	while (!state->QuitRequested()){
+
+
 		if (LOOP_MENU) printf (" 		Calculating dt\n");
 		CalculateDeltaTime();
 		if (LOOP_MENU)printf (" 		Updating input\n");

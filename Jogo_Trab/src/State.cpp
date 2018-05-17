@@ -11,6 +11,10 @@
 #include "../include/InputManager.h"
 #include "../include/CameraFollower.h"
 #include "../include/Alien.h"
+#include "../include/PenguinBody.h"
+#include "../include/Collider.h"
+#include "../include/Collision.h"
+
 #include <cstdlib>
 #include <ctime>
 #include <memory>
@@ -65,18 +69,23 @@ State::State(){
 	mapObject->box.w=TILEW;
 	objectArray.back()->AddComponent(map);
 
-
-
 	GameObject *alienObject = new GameObject();
 	alienObject->box.y= (300) ;
 	alienObject->box.x= (512) ;
 
-	Alien *alien = new Alien(*alienObject, 8);
-
-
+	Alien *alien = new Alien(*alienObject, 3);
 	alienObject->AddComponent(alien);
-
 	objectArray.emplace_back(alienObject);
+
+
+	GameObject *pbodyObject = new GameObject();
+	pbodyObject->box.SetPos(704, 640);
+
+	PenguinBody *pbody = new PenguinBody(*pbodyObject);
+	pbodyObject->AddComponent(pbody);
+	objectArray.emplace_back(pbodyObject);
+
+	Camera::GetInstance().Follow(pbodyObject);
 
 
 }
@@ -109,11 +118,6 @@ void State::Update(float dt){
 		quitRequested = true;
 	}
 
-/*	if (InputManager::GetInstance().IsKeyDown(' ')){
-		Vec2 objPos = Vec2( 200, 0 ).GetRotated( -PI + PI*(rand() % 1001)/500.0)+Vec2( mouseX, mouseY );
-		AddObject((int)objPos.x, (int)objPos.y);
- 	}*/
-
 	Camera::GetInstance().Update(dt);
 
 
@@ -121,15 +125,32 @@ void State::Update(float dt){
 		GameObject *aux;
 		for (int i=0; i<size; i++){
 			if (UPDATE_MENU) printf ("	Initializing Update %d/%d...\n", i+1, size);
-
 			objectArray[i]->Update(dt);
-			if (objectArray[i]->IsDead()){
-				objectArray.erase(objectArray.begin()+i);
-				size--;
-				i--;
-			}
-
 		}
+
+		for (int j=0; j<size-1;j++){
+			for (int k=j+1; k<size; k++){
+				//printf ("aliv\n");
+				Collider *a = nullptr,*b = nullptr;
+				a=(Collider *) objectArray[j]->GetComponent("Collider");
+				b=(Collider *) objectArray[k]->GetComponent("Collider");
+				if (a != nullptr && b!=nullptr && Collision::IsColliding(a->box, b->box, objectArray[j]->angle, objectArray[k]->angle)){
+					objectArray[j]->NotifyCollision(*objectArray[k]);
+					objectArray[k]->NotifyCollision(*objectArray[j]);
+				}
+			}
+		}
+
+		for (int l=0; l<size; l++){
+			if (objectArray[l]->IsDead()){
+				objectArray.erase(objectArray.begin()+l);
+				size--;
+				l--;
+			}
+		}
+
+
+
 	if (UPDATE_MENU) printf ("	All the updates are done!...\n");
 }
 
@@ -163,17 +184,11 @@ std::weak_ptr<GameObject> State::AddObject (GameObject* go){
 
 	if (started) go_sptr->Start();
 
-	return go_sptr;
+	return std::weak_ptr<GameObject>(go_sptr);
 
 }
 
-/*std::weak_ptr<GameObject> State::GetObjectPtr(GameObject *go){
-	int size = objectArray.size();
-	for (int i=0; i<size; i++){
-		if (objectArray[i].get()==go) return (std::weak_ptr<GameObject>)(objectArray[i]);
-	}
-	return std::weak_ptr<GameObject>();
-}*/
+
 
 std::weak_ptr<GameObject> State::GetObjectPtr(GameObject *go) {
     for(auto& it : objectArray){

@@ -10,6 +10,8 @@ public:
 	bool Is(std::string type);
 	void Shoot (Vec2 target);
 	Vec2 Pos();
+
+	void NotifyCollision(GameObject& other);
 private:
 	std::weak_ptr<GameObject> alienCenter;
 	float arc;

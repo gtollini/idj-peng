@@ -21,6 +21,9 @@ class GameObject {
 		void AddComponent (Component * cpt);
 		void RemoveComponent (std::unique_ptr<Component> cpt);
 		Component* GetComponent (std::string type);
+
+		void NotifyCollision(GameObject& other);
+
 		Rect box;
 		double angle;
 

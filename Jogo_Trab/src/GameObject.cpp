@@ -15,8 +15,8 @@ GameObject::GameObject(){
 
 GameObject::~GameObject(){
 	int size = components.size();
-	for (int i=0; i<size; i++){
-		components[i].release();
+	for (int i=size-1; i>0; i--){
+		components[i].reset();
 	}
 	components.clear();
 }
@@ -83,3 +83,9 @@ void GameObject::Start(){
 	}
 }
 
+void GameObject::NotifyCollision(GameObject& other){
+	int size = components.size();
+		for (int i=0; i<size; i++){
+			components[i]->NotifyCollision(other);
+		}
+}

@@ -6,20 +6,20 @@
 #include "../include/InputManager.h"
 #include "../include/Bullet.h"
 #include "../include/Game.h"
+#include "../include/Collider.h"
 
 #include <cmath>
 #include <iostream>
 
-
 #define R 150
 const float W = PI/2;
 
-#define BULLET_SPEED 1
+#define BULLET_SPEED 0.5
 #define BULLET_DAMAGE 10
 #define BULLET_MAXDISTANCE 1000
 
 const std::string minionSpriteAdd	= 	"assets/img/minion.png";
-const std::string bulletSpriteAdd	= 	"assets/img/minionbullet1.png";
+const std::string bulletSpriteAdd	= 	"assets/img/minionbullet2.png";
 
 Minion::Minion(GameObject& associated, std::weak_ptr<GameObject> alienCenter, float arcOffsetDeg) : Component (associated), alienCenter(alienCenter){
 
@@ -37,10 +37,18 @@ Minion::Minion(GameObject& associated, std::weak_ptr<GameObject> alienCenter, fl
 	associated.box.h = sprite->GetHeight();
 
 	associated.box.Center();
+
+	Collider *collider = new Collider(associated);
+	associated.AddComponent(collider);
 }
 
 
 void Minion::Update (float dt){
+	if (alienCenter.lock() == nullptr){
+		associated.RequestDelete();
+		return;
+	}
+
 
 	arc+=W*dt/1000;
 
@@ -77,7 +85,16 @@ void Minion::Shoot (Vec2 target){
 	target.x -= associated.box.w/4;
 	target.y -= associated.box.h/4;
 
-	Bullet *bullet = new Bullet(*bulletObject, std::atan2(target.y, target.x), BULLET_SPEED, BULLET_DAMAGE, BULLET_MAXDISTANCE, bulletSpriteAdd);
+	Bullet *bullet = new Bullet(*bulletObject, std::atan2(target.y, target.x), BULLET_SPEED, BULLET_DAMAGE, BULLET_MAXDISTANCE, bulletSpriteAdd,3, 200, true);
 	bulletObject->AddComponent(bullet);
 	Game::GetInstance().GetState().AddObject(bulletObject);
+}
+
+
+void Minion::NotifyCollision(GameObject& other){
+/*	Bullet *bullet =(Bullet *) other.GetComponent("Bullet");
+	if (bullet  != nullptr){
+		hp-=bullet->GetDamage();
+		printf ("Minion: %d\n", hp);
+	}*/
 }

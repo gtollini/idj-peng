@@ -85,3 +85,20 @@ void Rect::CenterRot(float a, float b, float c, float d){
 	this->x= a - c*sin(d);
 	this->y= b - c*cos(d);
 }
+
+Vec2 Rect::GetCenter(){
+	Vec2 a;
+	a.x=this->x + this->w/2;
+	a.y=this->y + this->h/2;
+	return a;
+}
+
+
+bool Rect::IsColliding (Rect a){
+	bool result;
+	result =  (a.x > this->x && a.x < this->x + this->w) && (a.y > this->y && a.y < this->y + this->h); 					/* vertice de a dentro deste */
+	result = result || ((this->y - a.y > 0 && this->y - a.y  < a.h)   && (a.x - this->x > 0 && a.x - this->x < this->w) ); 	/* vertice de a acima deste */
+	result = result || ((a.y - this->y > 0 && a.y- this->y < this->h) && (this->x - a.x > 0 && this->x - a.x < a.w));		/* vertice de a à esquerda deste */
+	return result;
+}
+

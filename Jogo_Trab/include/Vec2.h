@@ -22,6 +22,18 @@ public:
 	bool operator>=(const Vec2 a);
 	bool operator<=(const Vec2 a);
 
+	 Vec2 operator+(const Vec2& rhs) const {
+	    return Vec2(x + rhs.x, y + rhs.y);
+	 }
+
+	 Vec2 operator-(const Vec2& rhs) const {
+	    return Vec2(x - rhs.x, y - rhs.y);
+	 }
+
+	 Vec2 operator*(const float rhs) const {
+	    return Vec2(x * rhs, y * rhs);
+	 }
+
 
 private:
 

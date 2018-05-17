@@ -70,7 +70,6 @@ float Vec2::Abs(){
 }
 
 
-
 Vec2 Vec2::Uni(){
 	Vec2 b;
 	b.x=this->x/this->Abs();

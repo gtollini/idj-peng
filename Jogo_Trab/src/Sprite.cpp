@@ -7,13 +7,17 @@
 
 #include <iostream>
 
-
 Sprite::Sprite(GameObject& associated): Component(associated){
 	texture=nullptr;
 	width=0;
 	height=0;
 	scale.x=1;
 	scale.y=1;
+
+	this->frameTime=0;
+	this->frameCount=0;
+	currentFrame=0;
+	timeElapsed=0;
 }
 
 Sprite::Sprite(std::string file, GameObject& associated): Component(associated){
@@ -23,6 +27,11 @@ Sprite::Sprite(std::string file, GameObject& associated): Component(associated){
 	Open (file.c_str());
 	scale.x=1;
 	scale.y=1;
+
+	this->frameTime=0;
+	this->frameCount=0;
+	currentFrame=0;
+	timeElapsed=0;
 }
 
 Sprite::Sprite(int x, int y,std::string file, GameObject& associated): Component(associated){
@@ -34,12 +43,25 @@ Sprite::Sprite(int x, int y,std::string file, GameObject& associated): Component
 	clipRect.y=y;
 	scale.x=1;
 	scale.y=1;
+
+	this->frameTime=0;
+	this->frameCount=0;
+	currentFrame=0;
+	timeElapsed=0;
+}
+
+Sprite::Sprite(GameObject& associated, std::string file, int frameCount, float frameTime, float secondsToSelfDestruct) : Sprite(file, associated){
+	this->frameTime=frameTime;
+	SetFrameCount(frameCount);
+	this->secondsToSelfDestruct = secondsToSelfDestruct;
+	selfDestructCount.Restart();
+	currentFrame=0;
+	timeElapsed=0;
+
 }
 
 
-
 Sprite::~Sprite(){
-	resources.ClearImages();
 }
 
 
@@ -59,6 +81,27 @@ void Sprite::SetClip(int x, int y, int w, int h){
 }
 
 void Sprite::Update(float dt){
+	if (secondsToSelfDestruct>0){
+		selfDestructCount.Update(dt);
+		if (selfDestructCount.Get()/1000>secondsToSelfDestruct){
+			associated.RequestDelete();
+			return;
+		}
+	}
+	timeElapsed+=dt;
+	if (frameCount>1){
+		if(currentFrame < frameCount-1){
+			if (timeElapsed>frameTime){
+				currentFrame++;
+				timeElapsed-=frameTime;
+				SetClip(currentFrame*clipRect.w,clipRect.y,clipRect.w, clipRect.h);
+			}
+		}
+		else{
+		//	currentFrame = 0;
+		//	SetClip(0, 0, clipRect.w, clipRect.h);
+		}
+	}
 }
 
 
@@ -79,6 +122,7 @@ void Sprite::Render(int srcX, int srcY, int h, int  w,  int dstX, int dstY){
 	SDL_RenderCopy(Game::GetInstance().GetRenderer(), texture, &srcrect, &dstrect);
 }
 void Sprite::SetScale(float ScaleX, float ScaleY){
+	printf ("x:%f y:%f\n", ScaleX, ScaleY);
 	if (ScaleX!=0) 	scale.x=ScaleX;
 	if (ScaleY!=0)	scale.y=ScaleY;
 
@@ -90,7 +134,7 @@ Vec2 Sprite::GetScale(){
 }
 
 int Sprite::GetWidth(){
-	return width*scale.x;
+	return clipRect.w*scale.x;
 }
 
 int Sprite::GetHeight(){
@@ -109,4 +153,18 @@ bool Sprite::IsOpen(){
 
 bool Sprite::Is(std::string type){
 	return type=="Sprite";
+}
+
+void Sprite::SetFrame(int frame){
+	this->currentFrame=frame;
+}
+
+void Sprite::SetFrameTime(float frameTime){
+	this->frameTime=frameTime;
+}
+void Sprite::SetFrameCount (int frameCount){
+	this->frameCount=frameCount;
+	clipRect.w /= frameCount;
+	associated.box.w = GetWidth();
+
 }

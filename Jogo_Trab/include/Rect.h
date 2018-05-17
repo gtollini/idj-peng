@@ -18,7 +18,7 @@ public:
 
 	Rect operator+(Vec2 a);
 
-
+	Vec2 GetCenter();
 	void Center ();
 	void CenterRot(float a, float b, float c, float d);
 	float abs(Rect a);
@@ -27,7 +27,7 @@ public:
 
 
 	bool Contains (float a, float b);
-
+	bool IsColliding (Rect a);
 
 
 	Vec2 Pos ();
