@@ -8,6 +8,7 @@
 #include "../include/Collider.h"
 #include "../include/Bullet.h"
 #include "../include/Sound.h"
+#include "../include/GameData.h"
 
 
 #define PI 3.1415
@@ -38,9 +39,9 @@ PenguinBody::PenguinBody(GameObject& associated) : Component(associated){
 
 void PenguinBody::Start(){
 	GameObject *cannonObject = new GameObject();
-	PenguinCannon *cannon = new PenguinCannon(*cannonObject, Game::GetInstance().GetState().GetObjectPtr(&associated));
+	PenguinCannon *cannon = new PenguinCannon(*cannonObject, Game::GetInstance().GetCurrentState().GetObjectPtr(&associated));
 	cannonObject->AddComponent(cannon);
-	pcannon=Game::GetInstance().GetState().AddObject(cannonObject);
+	pcannon=Game::GetInstance().GetCurrentState().AddObject(cannonObject);
 
 }
 
@@ -113,7 +114,9 @@ void PenguinBody::NotifyCollision(GameObject& other){
 			explosionObject->box.y = associated.box.GetCenter().y - explosionObject->box.h/2 ;//+ Camera::GetInstance().pos.y;
 
 
-			Game::GetInstance().GetState().AddObject(explosionObject);
+			Game::GetInstance().GetCurrentState().AddObject(explosionObject);
+
+			GameData::playerVictory = false;
 
 		}
 	}

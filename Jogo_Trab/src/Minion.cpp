@@ -22,7 +22,6 @@ const std::string minionSpriteAdd	= 	"assets/img/minion.png";
 const std::string bulletSpriteAdd	= 	"assets/img/minionbullet2.png";
 
 Minion::Minion(GameObject& associated, std::weak_ptr<GameObject> alienCenter, float arcOffsetDeg) : Component (associated), alienCenter(alienCenter){
-
 	this->arc=arcOffsetDeg;
 	Sprite *sprite = new Sprite(0,0,minionSpriteAdd, associated);
 	associated.AddComponent(sprite);
@@ -32,6 +31,7 @@ Minion::Minion(GameObject& associated, std::weak_ptr<GameObject> alienCenter, fl
 	initPos.y=0;
 	initPos=initPos.GetRotated(this->arc);
 
+	associated.box.SetPos(alienCenter.lock()->box.GetCenter() +initPos);
 
 	associated.box.w = sprite->GetWidth();
 	associated.box.h = sprite->GetHeight();
@@ -41,6 +41,7 @@ Minion::Minion(GameObject& associated, std::weak_ptr<GameObject> alienCenter, fl
 	Collider *collider = new Collider(associated);
 	associated.AddComponent(collider);
 }
+
 
 
 void Minion::Update (float dt){
@@ -87,7 +88,7 @@ void Minion::Shoot (Vec2 target){
 
 	Bullet *bullet = new Bullet(*bulletObject, std::atan2(target.y, target.x), BULLET_SPEED, BULLET_DAMAGE, BULLET_MAXDISTANCE, bulletSpriteAdd,3, 200, true);
 	bulletObject->AddComponent(bullet);
-	Game::GetInstance().GetState().AddObject(bulletObject);
+	Game::GetInstance().GetCurrentState().AddObject(bulletObject);
 }
 
 

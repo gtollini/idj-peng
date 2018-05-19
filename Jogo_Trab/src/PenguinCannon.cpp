@@ -74,7 +74,7 @@ void PenguinCannon::Shoot(){
 
 		Bullet *bullet = new Bullet(*bulletObject, angle, BULLET_SPEED, BULLET_DAMAGE, BULLET_MAXDISTANCE, bulletSpriteAdd,4,100, false);
 		bulletObject->AddComponent(bullet);
-		Game::GetInstance().GetState().AddObject(bulletObject);}
+		Game::GetInstance().GetCurrentState().AddObject(bulletObject);}
 
 }
 

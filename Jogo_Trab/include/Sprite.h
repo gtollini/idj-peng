@@ -3,7 +3,6 @@
 #define SPRITE_CLASS
 #include "Component.h"
 #include "SDL2/SDL.h"
-#include "Resources.h"
 #include "Timer.h"
 
 
@@ -12,9 +11,7 @@ class Sprite: public Component {
 		Sprite(std::string file);
 		Sprite(GameObject& associated);
 		Sprite(std::string type, GameObject& associated);
-		Sprite(std::string type, GameObject& associated, Resources* resources);
 		Sprite(int x, int y,std::string type, GameObject& associated);
-		Sprite(int x, int y,std::string type, GameObject& associated, Resources* resources);
 		Sprite(GameObject& associated, std::string file, int frameCount=1, float frameTime=1, float secondsToSelfDestruct = 0);
 		~Sprite();
 
@@ -50,7 +47,6 @@ class Sprite: public Component {
 		int width;
 		int height;
 		SDL_Rect clipRect;
-		Resources resources;
 		Vec2 scale;
 
 };

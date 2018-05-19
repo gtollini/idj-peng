@@ -13,7 +13,7 @@ Music::Music(std::string file){
 
 Music::~Music(){
 	Stop(STOPCONST);
-	resources.ClearMusics();
+	Resources::GetInstance().ClearMusics();
 }
 
 void Music::Play(int i){
@@ -25,7 +25,7 @@ void Music::Stop(int msToStop){
 }
 
 void Music::Open(std::string file){
-	music = resources.GetMusic(file);
+	music = Resources::GetInstance().GetMusic(file);
 }
 
 bool Music::IsOpen(){

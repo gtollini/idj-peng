@@ -1,11 +1,11 @@
 #include "SDL2/SDL_image.h"
-#include "../include/State.h"
 #include "../include/Sprite.h"
 #include "../include/Game.h"
 #include "../include/Resources.h"
 #include "../include/Camera.h"
 
 #include <iostream>
+#include "../include/StageState.h"
 
 Sprite::Sprite(GameObject& associated): Component(associated){
 	texture=nullptr;
@@ -62,11 +62,12 @@ Sprite::Sprite(GameObject& associated, std::string file, int frameCount, float f
 
 
 Sprite::~Sprite(){
+	Resources::GetInstance().ClearImages();
 }
 
 
 void Sprite::Open(std::string file){
-	this->texture=resources.GetImage(file);
+	this->texture=Resources::GetInstance().GetImage(file);
 	SDL_QueryTexture(texture, nullptr, nullptr, &width, &height);
 	SetClip (0,0,width, height);
 	associated.box.w=(float)width;

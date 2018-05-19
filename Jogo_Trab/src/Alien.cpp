@@ -3,7 +3,6 @@
 #include "../include/InputManager.h"
 #include "../include/Camera.h"
 #include "../include/Minion.h"
-#include "../include/State.h"
 #include "../include/Game.h"
 #include "../include/Collider.h"
 #include "../include/Bullet.h"
@@ -18,6 +17,7 @@ const std::string alienSpriteAdd	= 	"assets/img/alien.png";
 const std::string deathSpriteAddress =  "assets/img/aliendeath.png";
 const std::string explosionSoundAddress =  "assets/audio/boom.wav";
 
+int Alien::alienCount = 0;
 
 Alien::Alien(GameObject& associated, int nMinions) : Component(associated){
 	Sprite *sprite = new Sprite(0, 0, alienSpriteAdd, associated);
@@ -38,15 +38,17 @@ Alien::Alien(GameObject& associated, int nMinions) : Component(associated){
 	alienCount++;
 	state=RESTING;
 
+
 }
+
 
 void Alien::Start(){
 	state=RESTING;
 	for (int i=0; i<nMinions; i++){
 			GameObject *minionObject = new GameObject();
-			Minion *minion = new Minion(*minionObject, Game::GetInstance().GetState().GetObjectPtr(&associated), (float)(i*2*PI/(nMinions)));
+			Minion *minion = new Minion(*minionObject, Game::GetInstance().GetCurrentState().GetObjectPtr(&associated), (float)(i*2*PI/(nMinions)));
 			minionObject->AddComponent(minion);
-			minionArray.push_back(Game::GetInstance().GetState().AddObject(minionObject));
+			minionArray.push_back(Game::GetInstance().GetCurrentState().AddObject(minionObject));
 		}
 }
 
@@ -132,7 +134,7 @@ void Alien::NotifyCollision(GameObject& other){
 			explosionObject->box.y = associated.box.GetCenter().y - explosionObject->box.h/2 ;//+ Camera::GetInstance().pos.y;
 
 
-			Game::GetInstance().GetState().AddObject(explosionObject);
+			Game::GetInstance().GetCurrentState().AddObject(explosionObject);
 		}
 	}
 

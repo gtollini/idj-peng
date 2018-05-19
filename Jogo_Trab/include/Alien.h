@@ -5,6 +5,7 @@
 #include "Vec2.h"
 #include "Timer.h"
 
+
 class Alien : public Component {
 public:
 	Alien(GameObject& Associated, int nMinions);
@@ -15,8 +16,10 @@ public:
 	bool Is(std::string type);
 
 	void NotifyCollision(GameObject& other);
+
+	static int alienCount;
 private:
-	int alienCount;
+
 
 	enum AlienState { MOVING, RESTING};
 	AlienState state;

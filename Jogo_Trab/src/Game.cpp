@@ -1,8 +1,8 @@
 #include "SDL2/SDL_image.h"
 #include "SDL2/SDL_mixer.h"
 #include "../include/Game.h"
-#include "../include/State.h"
 #include "../include/InputManager.h"
+#include "../include/StageState.h"
 
 
 #define LOOP_MENU 0
@@ -53,10 +53,30 @@ Game::Game(char * title, int width, int height){
 		SDL_Quit();
 		abort();
 	}
-	this->state = new State();
+	if (TTF_Init()){
+		printf ("Erro na inicialização das fontes\n");
+
+		SDL_DestroyRenderer(renderer);
+		SDL_DestroyWindow(window);
+		Mix_CloseAudio();
+		Mix_Quit();
+		IMG_Quit();
+		SDL_Quit();
+		abort();
+	}
+	this->storedState = nullptr;
 }
 
 Game::~Game(){
+	if (storedState!=nullptr) delete storedState;
+
+	while (!stateStack.empty()){
+		stateStack.pop();
+	}
+
+	Resources::GetInstance().ClearAll();
+
+	TTF_Quit();
 	SDL_DestroyRenderer(renderer);
 	SDL_DestroyWindow(window);
 	Mix_CloseAudio();
@@ -72,18 +92,44 @@ Game& Game::GetInstance () {
 	return *instance;
 	}
 
-State& Game::GetState(){
-	return *state;
+State& Game::GetCurrentState(){
+	return *stateStack.top();
 }
 
 SDL_Renderer* Game::GetRenderer(){
 	return renderer;
 }
 
-void Game::Run(){
-	state->Start();
+void Game::Push(State* state){
+	storedState = state;
+}
 
-	while (!state->QuitRequested()){
+void Game::Run(){
+	if (storedState==nullptr){
+		printf ("ERRO: não foi possível carregar o estado inicial do jogo. Encerrando...\n");
+		return;
+	}
+
+	stateStack.emplace(storedState);
+	stateStack.top()->Start();
+	storedState=nullptr;
+
+	while (!stateStack.empty() && !stateStack.top()->QuitRequested()){
+
+		if (stateStack.top()->PopRequested()){
+			stateStack.top()->Pause();
+			stateStack.pop();
+			Resources::GetInstance().ClearAll();
+			Camera::GetInstance().pos.x=0;
+			Camera::GetInstance().pos.y=0;
+			if (!stateStack.empty()) stateStack.top()->Resume();
+		}
+		if (storedState!=nullptr){
+			if (!stateStack.empty()) stateStack.top()->Pause();
+			stateStack.emplace(storedState);
+			stateStack.top()->Start();
+			storedState=nullptr;
+		}
 
 
 		if (LOOP_MENU) printf (" 		Calculating dt\n");
@@ -91,14 +137,14 @@ void Game::Run(){
 		if (LOOP_MENU)printf (" 		Updating input\n");
 		InputManager::GetInstance().Update();
 		if (LOOP_MENU)printf (" 		Updating state\n");
-		state->Update(dt);
+		stateStack.top()->Update(dt);
 		if (LOOP_MENU)printf (" 		Rendering state\n");
-		state->Render();
+		stateStack.top()->Render();
 		if (LOOP_MENU)printf (" 		Rendering\n");
 		SDL_RenderPresent(renderer);
 		if (LOOP_MENU)printf (" 		Done! dt\n");
 		SDL_Delay(33);}
-	state->Delete();
+	Resources::GetInstance().ClearAll();
 
 }
 

@@ -1,44 +1,43 @@
-#ifdef STATE_CLASS
-#else
-#define STATE_CLASS
+#ifndef INCLUDE_STATE_H_
+#define INCLUDE_STATE_H_
 
 #include <memory>
-#include "SDL2/SDL.h"
-#include "Sprite.h"
-#include "Music.h"
 #include <vector>
-#include <iostream>
-#include "Resources.h"
-#include "Camera.h"
 
-
-
+#include "GameObject.h"
 
 class State{
-	public:
-		State();
-		void Start();
-		std::weak_ptr<GameObject> AddObject(GameObject* go);
-		std::weak_ptr<GameObject> GetObjectPtr(GameObject* go);
+public:
+	State();
+	virtual ~State();
 
-		void AddObject(int MouseX, int MouseY);
-		void Input();
-		bool QuitRequested();
-		void LoadAssets();
-		void Update(float dt);
-		void Render();
-		void Delete();
+	virtual void LoadAssets()		= 0;
+	virtual void Update(float dt) 	= 0;
+	virtual void Render()			= 0;
 
-	private:
-		~State();
-		bool started;
-		std::vector<std::shared_ptr<GameObject>> objectArray;
+	virtual void Start()			= 0;
+	virtual void Pause()			= 0;
+	virtual void Resume()			= 0;
 
-		Music *music;
-		bool quitRequested;
-		//std::vector<std::unique_ptr<GameObject>> objectArray;
+	virtual std::weak_ptr<GameObject> AddObject (GameObject* object);
+	virtual std::weak_ptr<GameObject> GetObjectPtr (GameObject* object);
+
+	bool PopRequested();
+	bool QuitRequested();
+
+protected:
+	void StartArray();
+	virtual void UpdateArray(float dt);
+	virtual void RenderArray();
+
+	bool popRequested;
+	bool quitRequested;
+	bool started;
+
+	std::vector<std::shared_ptr<GameObject>> objectArray;
 
 };
+
 
 
 #endif

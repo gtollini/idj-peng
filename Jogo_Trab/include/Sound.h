@@ -3,7 +3,6 @@
 #include "Component.h"
 #include "SDL2/SDL_mixer.h"
 #include "GameObject.h"
-#include "Resources.h"
 
 
 class Sound : public Component {
@@ -23,7 +22,6 @@ class Sound : public Component {
 	private:
 		Mix_Chunk* chunk;
 		int channel;
-		Resources resources;
 };
 
 

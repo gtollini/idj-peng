@@ -9,7 +9,7 @@ TileSet::TileSet(int tileWidth, int tileHeight, std::string file) : tileWidth (t
 	tileset =new Sprite(file, *tileSetObject);
 	rows = tileset->GetHeight()/tileHeight;
 	columns = tileset->GetWidth()/tileWidth;
-	delete tileSetObject;
+	//delete tileSetObject;
 }
 
 void TileSet::RenderTile (unsigned index, float x, float y){

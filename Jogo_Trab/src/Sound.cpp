@@ -1,5 +1,6 @@
 #include "../include/Sound.h"
 #include "SDL2/SDL_mixer.h"
+#include "../include/Resources.h"
 
 Sound::Sound(GameObject& associated) : Component(associated){
 	chunk=nullptr;
@@ -29,7 +30,7 @@ void Sound::Render(){
 }
 
 void Sound::Open(std::string file){
-	chunk = resources.GetSound(file);
+	chunk = Resources::GetInstance().GetSound(file);
 }
 
 bool Sound::Is(std::string type){
@@ -39,5 +40,6 @@ bool Sound::Is(std::string type){
 
 Sound::~Sound(){
 	if (chunk!=nullptr) Mix_HaltChannel (channel);
-	resources.ClearSounds();
+	chunk=nullptr;
+	Resources::GetInstance().ClearSounds();
 }

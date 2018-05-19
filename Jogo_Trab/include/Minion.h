@@ -11,6 +11,8 @@ public:
 	void Shoot (Vec2 target);
 	Vec2 Pos();
 
+	void LoadAssets();
+
 	void NotifyCollision(GameObject& other);
 private:
 	std::weak_ptr<GameObject> alienCenter;
